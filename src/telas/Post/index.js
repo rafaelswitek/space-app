@@ -5,16 +5,18 @@ import estilos from "./estilos";
 import { entradas } from "./entradas";
 import { alteraDados } from "../../utils/comum";
 import { IconeClicavel } from "../../componentes/IconeClicavel";
-import { salvarImagem } from "../../servicos/storage";
+import { salvarImagem, deletarImagem } from "../../servicos/storage";
 import * as ImagePicker from 'expo-image-picker';
 
 import uploadImagemPadrao from '../../assets/upload.jpeg';
+import { MenuSelecaoInferior } from "../../componentes/MenuSelecaoInferior";
 
 export default function Post({ navigation, route }) {
     const [desabilitarEnvio, setDesabilitarEnvio] = useState(false);
     const { item } = route?.params || {};
 
-    const [imagem, setImagem] = useState(null)
+    const [imagem, setImagem] = useState(item?.imagemUrl || null)
+    const [mostrarMenu, setMostrarMenu] = useState(false);
 
     const [post, setPost] = useState({
         titulo: item?.titulo || "",
@@ -27,7 +29,7 @@ export default function Post({ navigation, route }) {
         setDesabilitarEnvio(true);
 
         if (item) {
-            await atualizarPost(item.id, post);
+            await verificarAlteracaoPost();
             return navigation.goBack();
         } 
 
@@ -38,12 +40,24 @@ export default function Post({ navigation, route }) {
         navigation.goBack()
 
         if(imagem != null){
-            const url = await salvarImagem(imagem, idPost);
-            await atualizarPost(idPost, {
-                imagemUrl: url
-            });    
+            atualizarPostComImagem(idPost)    
         }
-        
+    }
+
+    async function atualizarPostComImagem(idPost){
+        const url = await salvarImagem(imagem, idPost);
+        await atualizarPost(idPost, {
+            imagemUrl: url
+        });
+    }
+
+    async function verificarAlteracaoPost(){
+        if(post.imagemUrl != imagem){
+            atualizarPostComImagem(item.id)
+        }
+        else {
+            atualizarPost(item.id, post)
+        }
     }
 
     async function escolherImagemDaGaleria(){
@@ -61,6 +75,15 @@ export default function Post({ navigation, route }) {
           }
     }
 
+    async function removerImagemPost(){
+        if(!item) return
+        if(deletarImagem(item.id)){
+            await atualizarPost(item.id, {
+                imagemUrl: null
+            });
+            navigation.goBack()
+        }
+    }
 
     return (
         <View style={estilos.container}>
@@ -97,7 +120,7 @@ export default function Post({ navigation, route }) {
 
                 <TouchableOpacity 
                     style={estilos.imagem}
-                    onPress={escolherImagemDaGaleria}
+                    onPress={() => setMostrarMenu(true)}
                 >
                     <Image 
                         source={imagem ? { uri: imagem} : uploadImagemPadrao}
@@ -110,6 +133,17 @@ export default function Post({ navigation, route }) {
             <TouchableOpacity style={estilos.botao} onPress={salvar} disabled={desabilitarEnvio}>
                 <Text style={estilos.textoBotao}>Salvar</Text>
             </TouchableOpacity>
+            
+            <MenuSelecaoInferior setMostrarMenu={setMostrarMenu} mostrarMenu={mostrarMenu}>
+                <TouchableOpacity style={estilos.opcao} onPress={escolherImagemDaGaleria}>
+                    <Text>Adicionar foto</Text>
+                    <Text> &#128247;</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={estilos.opcao} onPress={removerImagemPost}>
+                    <Text>Remover foto</Text>
+                    <Text> &#128465;</Text>
+                </TouchableOpacity>
+            </MenuSelecaoInferior>
         </View>
     );
 }
