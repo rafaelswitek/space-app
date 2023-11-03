@@ -6,12 +6,15 @@ import { entradas } from "./entradas";
 import { alteraDados } from "../../utils/comum";
 import { IconeClicavel } from "../../componentes/IconeClicavel";
 import { salvarImagem } from "../../servicos/storage";
+import * as ImagePicker from 'expo-image-picker';
 
-const imagemGalaxia = "https://img.freepik.com/fotos-gratis/fundo-de-galaxia-espacial_53876-93121.jpg?w=1380&t=st=1670244963~exp=1670245563~hmac=f67b50518f25bd1278963ec472362c64905851115ae154cc3866fd99a3cea7c1"
+import uploadImagemPadrao from '../../assets/upload.jpeg';
 
 export default function Post({ navigation, route }) {
     const [desabilitarEnvio, setDesabilitarEnvio] = useState(false);
     const { item } = route?.params || {};
+
+    const [imagem, setImagem] = useState(null)
 
     const [post, setPost] = useState({
         titulo: item?.titulo || "",
@@ -23,17 +26,40 @@ export default function Post({ navigation, route }) {
     async function salvar() {
         setDesabilitarEnvio(true);
 
-        const url = await salvarImagem(imagemGalaxia, 'galaxia');
-
         if (item) {
             await atualizarPost(item.id, post);
-        } else {
-            await salvarPost({...post, imagemUrl: url});
+            return navigation.goBack();
+        } 
+
+        const idPost = await salvarPost({
+            ...post,
+            imagemUrl: ''
+        });
+        navigation.goBack()
+
+        if(imagem != null){
+            const url = await salvarImagem(imagem, idPost);
+            await atualizarPost(idPost, {
+                imagemUrl: url
+            });    
         }
         
-        navigation.goBack();
     }
 
+    async function escolherImagemDaGaleria(){
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+          });
+      
+          console.log(result);
+      
+          if (!result.canceled) {
+            setImagem(result.assets[0].uri);
+          }
+    }
 
 
     return (
@@ -68,6 +94,17 @@ export default function Post({ navigation, route }) {
                         />
                     </View>
                 ))}
+
+                <TouchableOpacity 
+                    style={estilos.imagem}
+                    onPress={escolherImagemDaGaleria}
+                >
+                    <Image 
+                        source={imagem ? { uri: imagem} : uploadImagemPadrao}
+                        style={estilos.imagem}
+                    />
+                </TouchableOpacity>
+
             </ScrollView>
 
             <TouchableOpacity style={estilos.botao} onPress={salvar} disabled={desabilitarEnvio}>
