@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { View, Text, TextInput, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, ScrollView, TouchableOpacity, Image } from "react-native";
 import { salvarPost, atualizarPost, deletarPost } from "../../servicos/firestore";
 import estilos from "./estilos";
 import { entradas } from "./entradas";
 import { alteraDados } from "../../utils/comum";
 import { IconeClicavel } from "../../componentes/IconeClicavel";
+import { salvarImagem } from "../../servicos/storage";
 
+const imagemGalaxia = "https://img.freepik.com/fotos-gratis/fundo-de-galaxia-espacial_53876-93121.jpg?w=1380&t=st=1670244963~exp=1670245563~hmac=f67b50518f25bd1278963ec472362c64905851115ae154cc3866fd99a3cea7c1"
 
 export default function Post({ navigation, route }) {
     const [desabilitarEnvio, setDesabilitarEnvio] = useState(false);
@@ -14,19 +16,25 @@ export default function Post({ navigation, route }) {
     const [post, setPost] = useState({
         titulo: item?.titulo || "",
         fonte: item?.fonte || "",
-        descricao: item?.descricao || ""
+        descricao: item?.descricao || "",
+        imagemUrl: item?.imagemUrl || null
     });
 
     async function salvar() {
         setDesabilitarEnvio(true);
+
+        const url = await salvarImagem(imagemGalaxia, 'galaxia');
+
         if (item) {
             await atualizarPost(item.id, post);
         } else {
-            await salvarPost(post);
+            await salvarPost({...post, imagemUrl: url});
         }
         
         navigation.goBack();
     }
+
+
 
     return (
         <View style={estilos.container}>
