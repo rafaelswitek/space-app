@@ -1,9 +1,6 @@
 <h1 align="center">
-    <img alt="Firebase-Firestore" title="#Firebase-Firestore" src=".images/header.png" width="100%" />
+    <img alt="Firebase Cloud Messaging" title="#Firebase Cloud Messaging" src=".images/header.png" width="100%" />
 </h1>
-
-<!-- https://alura-github-thumbnail-generator.vercel.app/ -->
-
 <h4 align="center"> 
 	SpaceApp
 </h4>
@@ -16,15 +13,13 @@
 
 ## :information_source: O que é o SpaceApp?
 
-O SpaceApp é uma aplicação feita em React Native que permite aos usuários entusiastas sobre astronomia salvarem fotos e informações sobre o espaço. Nessa aplicação foi integrado o Firebase Cloud Storage para que os usuários possam cadastrar vários posts sobre coisas de astrônima em nuvem.
+O SpaceApp é uma aplicação feita em React Native que permite aos usuários entusiastas sobre astronomia salvarem fotos e informações sobre o espaço. Nessa aplicação foi integrado o Firebase Cloud Messaging para que os usuários possam receber notificações sobre novos conteúdos relacionados ao espaço.
 
-Esse projeto é utilizado na formação Firebase de React Native da plataforma da Alura.
-
+Esse projeto é utilizado no curso de Firebase Cloud Messaging da plataforma da Alura.
 
 <h1 align="center">
-    <img alt="Demonstracao" title="Demonstracao" src=".images/demo.gif" width="400px" />
+    <img alt="Demonstracao" title="Demonstracao" src=".images/demo.gif" width="100%" />
 </h1>
-
 
 ## :rocket: Tecnologias
 
@@ -32,9 +27,10 @@ Esse projeto foi desenvolvido com a utilização das seguintes tecnologias:
 - [React Native][rn]
 - [Expo][expo]
 
+
 ## :information_source: Como usar
 
-Para copiar e executar essa aplicação, você precisa de três pré-requisitos: [Git](https://git-scm.com), [Node.js][nodejs] + [Yarn][yarn] intalados no seu computador.
+Para copiar e executar essa aplicação, você precisa de três pré-requisitos: Git, [Node.js][nodejs] + [Yarn][yarn] intalados no seu computador.
 
 No terminal, digite os comandos a seguir:
 
@@ -42,14 +38,15 @@ No terminal, digite os comandos a seguir:
 
 ```bash
 # Clonar esse repositório
-$ git clone https://github.com/alura-cursos/react-native-firebase-storage.git
+$ git clone https://github.com/alura-cursos/react-native-firebase-notification.git
 
 # Vá para o ropositório
-$ cd react-native-firebase-storage
+$ cd react-native-firebase-notification
 
 # Instale as dependências
 $ npm install
 ```
+
 
 ### Executar o Mobile
 
@@ -58,6 +55,7 @@ $ npm install
 $ npx expo start
 ```
 
+Para o projeto Web utilizado no curso, acesse o repositório [aqui](https://github.com/alura-cursos/spaceapp-web).
 
 
 Espero que você utilize ao máximo deste projeto para se aprimorar! E se quiser dar um salve, estou lá no LinkedIn [André Oliveira Cunha](https://www.linkedin.com/in/andr%C3%A9-oliveira-cunha-b26b3a156/). :wave: 

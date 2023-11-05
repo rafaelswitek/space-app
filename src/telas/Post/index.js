@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, ScrollView, TouchableOpacity, Image, LogBox } from "react-native";
+import { View, Text, TextInput, ScrollView, TouchableOpacity, Image } from "react-native";
 import { salvarPost, atualizarPost, deletarPost } from "../../servicos/firestore";
 import estilos from "./estilos";
 import { entradas } from "./entradas";
@@ -9,8 +9,6 @@ import { salvarImagem, deletarImagem } from "../../servicos/storage";
 
 import uploadImagemPadrao from '../../assets/upload.jpeg';
 import { MenuSelecaoInferior } from "../../componentes/MenuSelecaoInferior";
-
-LogBox.ignoreAllLogs()
 
 export default function Post({ navigation, route }) {
     const [desabilitarEnvio, setDesabilitarEnvio] = useState(false);
@@ -30,12 +28,12 @@ export default function Post({ navigation, route }) {
         setDesabilitarEnvio(true);
 
         if (item) {
-            if (!verificarItens(post.imagemUrl, imagem)) {
+            if(!verificarItens(post.imagemUrl, imagem)){
                 atualizarPostComImagem(item.id)
             }
             atualizarPost(item.id, post)
             return navigation.goBack();
-        }
+        } 
 
         const idPost = await salvarPost({
             ...post,
@@ -43,21 +41,21 @@ export default function Post({ navigation, route }) {
         });
         navigation.goBack()
 
-        if (imagem != null) {
-            atualizarPostComImagem(idPost)
+        if(imagem != null){
+            atualizarPostComImagem(idPost)    
         }
     }
 
-    async function atualizarPostComImagem(idPost) {
+    async function atualizarPostComImagem(idPost){
         const url = await salvarImagem(imagem, idPost);
         await atualizarPost(idPost, {
             imagemUrl: url
         });
     }
 
-    async function removerImagemPost() {
-        if (!item) return
-        if (await deletarImagem(item.id)) {
+    async function removerImagemPost(){
+        if(!item) return
+        if(await deletarImagem(item.id)){
             await atualizarPost(item.id, {
                 imagemUrl: null
             });
@@ -65,12 +63,12 @@ export default function Post({ navigation, route }) {
         }
     }
 
-    async function excluirPostCompleto() {
-        if (!item) return
+    async function excluirPostCompleto(){
+        if(!item) return
         deletarPost(item.id);
-        if (item.imagemUrl != null) {
+        if(item.imagemUrl != null){
             deletarImagem(item.id)
-        }
+        } 
         navigation.goBack();
     }
 
@@ -78,10 +76,10 @@ export default function Post({ navigation, route }) {
         <View style={estilos.container}>
             <View style={estilos.containerTitulo}>
                 <Text style={estilos.titulo}>{item ? "Editar post" : "Novo Post"}</Text>
-                <IconeClicavel
-                    exibir={!!item}
+                <IconeClicavel 
+                    exibir={!!item} 
                     onPress={excluirPostCompleto}
-                    iconeNome="trash-2"
+                    iconeNome="trash-2" 
                 />
             </View>
             <ScrollView style={{ width: "100%" }}>
@@ -92,11 +90,11 @@ export default function Post({ navigation, route }) {
                             value={post[entrada.name]}
                             placeholder={entrada.label}
                             multiline={entrada.multiline}
-                            onChangeText={(valor) =>
+                            onChangeText={(valor) => 
                                 alteraDados(
-                                    entrada.name,
-                                    valor,
-                                    post,
+                                    entrada.name, 
+                                    valor, 
+                                    post, 
                                     setPost
                                 )
                             }
@@ -107,12 +105,12 @@ export default function Post({ navigation, route }) {
                     </View>
                 ))}
 
-                <TouchableOpacity
+                <TouchableOpacity 
                     style={estilos.imagem}
                     onPress={() => setMostrarMenu(true)}
                 >
-                    <Image
-                        source={imagem ? { uri: imagem } : uploadImagemPadrao}
+                    <Image 
+                        source={imagem ? { uri: imagem} : uploadImagemPadrao}
                         style={estilos.imagem}
                     />
                 </TouchableOpacity>
@@ -122,7 +120,7 @@ export default function Post({ navigation, route }) {
             <TouchableOpacity style={estilos.botao} onPress={salvar} disabled={desabilitarEnvio}>
                 <Text style={estilos.textoBotao}>Salvar</Text>
             </TouchableOpacity>
-
+            
             <MenuSelecaoInferior setMostrarMenu={setMostrarMenu} mostrarMenu={mostrarMenu}>
                 <TouchableOpacity style={estilos.opcao} onPress={() => escolherImagemDaGaleria(setImagem)}>
                     <Text>Adicionar foto</Text>

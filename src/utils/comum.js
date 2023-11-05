@@ -22,19 +22,19 @@ export function verificaSeTemEntradaVazia(dados, setDados) {
   return false
 }
 
-export async function escolherImagemDaGaleria(setImagem) {
+export async function escolherImagemDaGaleria(setImagem){
   let result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    allowsEditing: true,
-    aspect: [4, 3],
-    quality: 1,
-  });
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-  if (!result.canceled) {
-    setImagem(result.assets[0].uri);
-  }
+    if (!result.canceled) {
+      setImagem(result.assets[0].uri);
+    }
 }
 
-export function verificarItens(item1, item2) {
+export function verificarItens(item1, item2){
   return item1 == item2;
 }

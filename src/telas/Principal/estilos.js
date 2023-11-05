@@ -4,7 +4,7 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#04244F",
-        alignItems: "flex-start",
+        alignItems: "center",
         justifyContent: "flex-start",
         paddingTop: StatusBar.currentHeight || 44,
         paddingHorizontal: 20,
